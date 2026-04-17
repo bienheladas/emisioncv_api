@@ -1,0 +1,15 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build
+**/bin/
+**/obj/
+
+# Logs
+/Minedu.VC.Issuer/logs/
+write-test.txt
+
+# dotnet
+*.nupkg

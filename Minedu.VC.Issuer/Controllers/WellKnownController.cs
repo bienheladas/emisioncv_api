@@ -1,0 +1,82 @@
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace Minedu.VC.Issuer.Controllers
+{
+    [Route(".well-known")]
+    [ApiController]
+    public class WellKnownController : ControllerBase
+    {
+        private readonly ILogger<WellKnownController> _logger;
+
+        public WellKnownController(ILogger<WellKnownController> logger)
+        {
+            _logger = logger;
+        }
+
+        [HttpGet("openid-credential-issuer")]
+        public IActionResult IssuerMetadata([FromServices] IConfiguration cfg)
+        {
+            var callerIp = HttpContext.Connection.RemoteIpAddress?.ToString();
+            var ua = Request.Headers["User-Agent"].ToString();
+            var accept = Request.Headers["Accept"].ToString();
+
+            _logger.LogInformation(
+                """
+                🔍 METADATA REQUEST RECEIVED
+                From IP: {Ip}
+                User-Agent: {UA}
+                Accept: {Accept}
+                """,
+                callerIp, ua, accept
+            );
+
+            try
+            {
+                var issuerBase = cfg["Oidc4Vci:IssuerBaseUrl"]!;
+                var issuerIdentifier = cfg["Oidc4Vci:IssuerIdentifier"]!;
+                var credConfigId = cfg["Oidc4Vci:CredentialConfigurationId"] ?? "certificado-estudios-vc";
+
+                var metadata = new
+                {
+                    credential_issuer = issuerIdentifier,
+                    authorization_servers = new[] { issuerIdentifier }, // mismo host en el prototipo
+                    //token_endpoint = $"{issuerBase.TrimEnd('/')}/token", //no existe en especificacion OID4VCI 1.0 se define en metada del AS
+                    credential_endpoint = $"{issuerBase.TrimEnd('/')}/issuer/credential",
+                    // Configuración mínima del tipo de credencial
+                    credential_configurations_supported = new Dictionary<string, object>
+                    {
+                        [credConfigId] = new
+                        {
+                            format = "ldp_vc",
+                            credential_definition = new
+                            {
+                                type = new[] { "VerifiableCredential", "CertificadoEstudios" }
+                            },
+                            // En piloto no declaramos cryptographic_suites_supported para no confundir a Inji
+                            credential_status = new
+                            {
+                                types = new[] { "BitstringStatusListEntry" },
+                                statusPurpose = "revocation",
+                                statusListCredential = $"{issuerBase.TrimEnd('/')}/status/1"
+                            }
+                        }
+                    }
+                };
+
+                // Log del JSON que devolvemos, recortado para no llenar el disco
+                var preview = System.Text.Json.JsonSerializer.Serialize(metadata);
+                if (preview.Length > 500)
+                    preview = preview.Substring(0, 500) + "...(truncated)";
+
+                _logger.LogInformation("🔄 METADATA RESPONSE: {Json}", preview);
+
+                return Ok(metadata);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "❌ Error while building openid-credential-issuer metadata");
+                return StatusCode(500, new { error = "metadata_generation_failed", message = ex.Message });
+            }
+        }
+    }
+}

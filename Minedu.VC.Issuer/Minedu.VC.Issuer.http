@@ -1,0 +1,6 @@
+@Minedu.VC.Issuer_HostAddress = http://localhost:5028
+
+GET {{Minedu.VC.Issuer_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
