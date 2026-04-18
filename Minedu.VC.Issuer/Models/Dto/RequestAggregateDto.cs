@@ -11,7 +11,7 @@
         public string? Nivel { get; set; }
         public string? IdGrado { get; set; }
         public string? GradoDescripcion { get; set; }
-        public Guid? CodigoVirtual { get; set; }
+        public string? CodigoVirtual { get; set; }
         public string? Director { get; set; }
 
         // Related aggregates

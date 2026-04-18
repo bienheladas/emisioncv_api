@@ -49,7 +49,7 @@ namespace Minedu.VC.Issuer.Services.Mapper
             {
                 Modalidad = a.IdModalidad ?? string.Empty,
                 Nivel = a.IdNivel ?? string.Empty,
-                CodigoVirtual = a.CodigoVirtual ?? Guid.NewGuid(),
+                CodigoVirtual = Guid.TryParse(a.CodigoVirtual, out var cv) ? cv : Guid.NewGuid(),
                 Titular = titular,
                 GradosConcluidos = gradosConcluidos
             };

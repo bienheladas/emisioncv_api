@@ -35,7 +35,7 @@ namespace Minedu.VC.Issuer.Data.Entities
         public string? GradoDescripcion { get; set; }
 
         [Column("CODIGO_VIRTUAL")]
-        public Guid? CodigoVirtual { get; set; }
+        public string? CodigoVirtual { get; set; }
 
         [Column("DIRECTOR")]
         public string? Director { get; set; }
