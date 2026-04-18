@@ -156,7 +156,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseStaticFiles();
+var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
+provider.Mappings[".jsonld"] = "application/ld+json";
+app.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = provider });
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
