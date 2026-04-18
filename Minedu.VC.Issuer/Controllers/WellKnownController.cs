@@ -78,5 +78,25 @@ namespace Minedu.VC.Issuer.Controllers
                 return StatusCode(500, new { error = "metadata_generation_failed", message = ex.Message });
             }
         }
+
+        // Inji busca el token_endpoint en estos dos endpoints de descubrimiento del AS
+        [HttpGet("oauth-authorization-server")]
+        [HttpGet("openid-configuration")]
+        public IActionResult AuthServerMetadata([FromServices] IConfiguration cfg)
+        {
+            var issuerBase = cfg["Oidc4Vci:IssuerBaseUrl"]!.TrimEnd('/');
+            var issuerIdentifier = cfg["Oidc4Vci:IssuerIdentifier"]!;
+
+            var metadata = new
+            {
+                issuer = issuerIdentifier,
+                token_endpoint = $"{issuerBase}/token",
+                grant_types_supported = new[] { "urn:ietf:params:oauth:grant-type:pre-authorized_code" },
+                pre_authorized_grant_anonymous_access_supported = true
+            };
+
+            _logger.LogInformation("🔄 AUTH SERVER METADATA RESPONSE for {Path}", Request.Path);
+            return Ok(metadata);
+        }
     }
 }
