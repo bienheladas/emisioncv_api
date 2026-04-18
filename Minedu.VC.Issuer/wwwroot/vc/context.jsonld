@@ -1,0 +1,85 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+
+    "schema": "https://schema.org/",
+    "vc": "https://www.w3.org/2018/credentials#",
+    "minedu": "https://emisorcv.ninnstack.com/vc/vocab#",
+
+    "id": "@id",
+    "type": "@type",
+
+    "modalidad": {
+      "@id": "minedu:modalidad",
+      "@type": "@vocab"
+    },
+
+    "nivel": {
+      "@id": "minedu:nivel",
+      "@type": "@vocab"
+    },
+
+    "codigoVirtual": {
+      "@id": "minedu:codigoVirtual",
+      "@type": "xsd:string"
+    },
+
+    "titular": {
+      "@id": "schema:Person",
+      "@type": "@id"
+    },
+
+    "nombres": "schema:givenName",
+    "apellidos": "schema:familyName",
+    "tipoDocumento": {
+        "@id": "minedu:tipoDocumento",
+        "@type": "@vocab"
+    },
+    "numeroDocumento": "schema:identifier",
+
+    "gradosConcluidos": {
+      "@id": "minedu:gradosConcluidos",
+      "@type": "@id"
+    },
+    "grado": { "@id": "minedu:grado", "@type": "xsd:integer" },
+    "anio": { "@id": "minedu:anio", "@type": "xsd:integer" },
+    "codigoModular": { "@id": "minedu:codigoModular", "@type": "xsd:string" },
+    "anexo": { "@id": "minedu:anexo", "@type": "xsd:string" },
+    "situacionFinal": { "@id": "minedu:situacionFinal", "@type": "xsd:string" },
+    "notas": "minedu:notas",
+    "area": "minedu:area",
+    "competencia": "minedu:competencia",
+    "competenciaTransversal": "minedu:competenciaTransversal",
+    "calificacion": {
+        "@id": "minedu:calificacion",
+        "@type": "@vocab"
+    },
+
+    "EBR": "minedu:EBR",
+    "EBA": "minedu:EBA",
+    "EBE": "minedu:EBE",
+
+    "A1": "minedu:A1",
+    "A2": "minedu:A2",
+    "A3": "minedu:A3",
+    "A5": "minedu:A5",
+    "B0": "minedu:B0",
+    "D1": "minedu:D1",
+    "D2": "minedu:D2",
+    "E0": "minedu:E0",
+    "E1": "minedu:E1",
+    "E2": "minedu:E2",
+    "F0": "minedu:F0",
+
+    "AD": "minedu:AD",
+    "A": "minedu:A",
+    "B": "minedu:B",
+    "C": "minedu:C",
+    "SinNota": "minedu:SinNota",
+
+    "DNI": "minedu:DNI",
+    "CodigoEstudiante": "minedu:CodigoEstudiante",
+    "CarnetExtranjeria": "minedu:CarnetExtranjeria"
+  }
+}
