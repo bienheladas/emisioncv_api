@@ -7,22 +7,22 @@ namespace Minedu.VC.Issuer.Data.Entities
     public class StudentEntity
     {
         [Key]
-        [Column("ID_ESTUDIANTE")]
+        [Column("id_estudiante")]
         public int Id { get; set; }
 
-        [Column("ID_TIPO_DOCUMENTO")]
+        [Column("id_tipo_documento")]
         public string TipoDocumento { get; set; } = string.Empty;
 
-        [Column("NUMERO_DOCUMENTO")]
+        [Column("numero_documento")]
         public string NumeroDocumento { get; set; } = string.Empty;
 
-        [Column("APELLIDO_PATERNO")]
+        [Column("apellido_paterno")]
         public string ApellidoPaterno { get; set; } = string.Empty;
 
-        [Column("APELLIDO_MATERNO")]
+        [Column("apellido_materno")]
         public string ApellidoMaterno { get; set; } = string.Empty;
 
-        [Column("NOMBRES")]
+        [Column("nombres")]
         public string Nombres { get; set; } = string.Empty;
 
         // Relaciones
