@@ -1,0 +1,314 @@
+{
+  "@context": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "schema": "https://schema.org/",
+    "minedu": "https://emisorcv.ninnstack.com/vc/vocab#",
+
+    "perteneceModalidad": { "@id": "minedu:perteneceModalidad", "@type": "@id" },
+    "rdfs:domain": { "@type": "@id" },
+    "rdfs:range": { "@type": "@id" }
+  },
+  "@graph": [
+    {
+      "@id": "minedu:modalidad",
+      "@type": "rdf:Property",
+      "rdfs:label": "Modalidad",
+      "rdfs:comment": "Tipo de modalidad de enseñanza según el sistema educativo peruano.",
+      "rdfs:domain": "https://www.w3.org/2018/credentials#VerifiableCredential",
+      "rdfs:range": "minedu:ModalidadType"
+    },
+    {
+      "@id": "minedu:ModalidadType",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Modalidad de Enseñanza",
+      "rdfs:comment": "Clase que agrupa los tipos de modalidad educativa en el Perú."
+    },
+    {
+      "@id": "minedu:nivel",
+      "@type": "rdf:Property",
+      "rdfs:label": "Nivel Educativo",
+      "rdfs:comment": "Nivel educativo oficial según el sistema peruano (Inicial, Primaria, Secundaria, Básica Alternativa, Básica Especial).",
+      "rdfs:domain": "https://www.w3.org/2018/credentials#VerifiableCredential",
+      "rdfs:range": "minedu:NivelType"
+    },
+    {
+      "@id": "minedu:NivelType",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Nivel de Educación",
+      "rdfs:comment": "Clase que agrupa los niveles educativos oficiales en el sistema peruano."
+    },
+    {
+      "@id": "minedu:perteneceModalidad",
+      "@type": "rdf:Property",
+      "rdfs:label": "Pertenece a Modalidad",
+      "rdfs:comment": "Indica la modalidad a la que pertenece un nivel educativo.",
+      "rdfs:domain": "minedu:NivelType",
+      "rdfs:range": "minedu:ModalidadType"
+    },
+    {
+      "@id": "minedu:codigoVirtual",
+      "@type": "rdf:Property",
+      "rdfs:label": "Código Virtual",
+      "rdfs:comment": "Identificador único (UUID) generado durante la emisión del certificado educativo.",
+      "rdfs:domain": "https://www.w3.org/2018/credentials#VerifiableCredential",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "minedu:tipoDocumento",
+      "@type": "rdf:Property",
+      "rdfs:label": "Tipo de Documento de Identidad",
+      "rdfs:comment": "Tipo de documento de identidad del titular (DNI, Código Estudiante, Carnet Extranjería, etc.).",
+      "rdfs:domain": "schema:Person",
+      "rdfs:range": "minedu:TipoDocumentoType"
+    },
+    {
+      "@id": "minedu:grado",
+      "@type": "rdf:Property",
+      "rdfs:label": "Grado",
+      "rdfs:comment": "Grado dentro de un nivel educativo (1° a 6°).",
+      "rdfs:domain": "minedu:GradoConcluido",
+      "rdfs:range": "xsd:integer"
+    },
+    {
+      "@id": "minedu:anio",
+      "@type": "rdf:Property",
+      "rdfs:label": "Año Lectivo",
+      "rdfs:comment": "Año en que se cursó el grado.",
+      "rdfs:domain": "minedu:GradoConcluido",
+      "rdfs:range": "xsd:integer"
+    },
+    {
+      "@id": "minedu:codigoModular",
+      "@type": "rdf:Property",
+      "rdfs:label": "Código Modular",
+      "rdfs:comment": "Código modular de la institución educativa.",
+      "rdfs:domain": "minedu:GradoConcluido",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "minedu:anexo",
+      "@type": "rdf:Property",
+      "rdfs:label": "Anexo",
+      "rdfs:comment": "Número de anexo (un dígito) que distingue instituciones educativas dentro de un mismo código modular.",
+      "rdfs:domain": "minedu:GradoConcluido",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "minedu:situacionFinal",
+      "@type": "rdf:Property",
+      "rdfs:label": "Situación Final",
+      "rdfs:comment": "Resultado del estudiante al concluir el grado (APROBADO o DESAPROBADO).",
+      "rdfs:domain": "minedu:GradoConcluido",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "minedu:notas",
+      "@type": "rdf:Property",
+      "rdfs:label": "Notas",
+      "rdfs:comment": "Conjunto de notas asignadas al estudiante.",
+      "rdfs:domain": "minedu:GradoConcluido",
+      "rdfs:range": "minedu:Nota"
+    },
+    {
+      "@id": "minedu:area",
+      "@type": "rdf:Property",
+      "rdfs:label": "Área",
+      "rdfs:comment": "Área de aprendizaje.",
+      "rdfs:domain": "minedu:Nota",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "minedu:competencia",
+      "@type": "rdf:Property",
+      "rdfs:label": "Competencia",
+      "rdfs:comment": "Competencia específica evaluada.",
+      "rdfs:domain": "minedu:Nota",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "minedu:competenciaTransversal",
+      "@type": "rdf:Property",
+      "rdfs:label": "Competencia Transversal",
+      "rdfs:comment": "Competencia transversal evaluada.",
+      "rdfs:domain": "minedu:Nota",
+      "rdfs:range": "xsd:string"
+    },
+    {
+      "@id": "minedu:calificacion",
+      "@type": "rdf:Property",
+      "rdfs:label": "Calificación",
+      "rdfs:comment": "Calificación obtenida por el estudiante.",
+      "rdfs:domain": "minedu:Nota",
+      "rdfs:range": "minedu:CalificacionType"
+    },
+    {
+      "@id": "minedu:TipoDocumentoType",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Tipo de Documento",
+      "rdfs:comment": "Clase que agrupa los tipos de documentos válidos."
+    },
+    {
+      "@id": "minedu:GradoConcluido",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Grado Concluido",
+      "rdfs:comment": "Registro de un grado concluido por un estudiante, incluyendo año, institución, situación final y notas."
+    },
+    {
+      "@id": "minedu:Nota",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Nota",
+      "rdfs:comment": "Calificación de un estudiante en un área, competencia o competencia transversal."
+    },
+    {
+      "@id": "minedu:CalificacionType",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Tipo de Calificación",
+      "rdfs:comment": "Clase que agrupa los posibles valores de calificación en el sistema educativo peruano."
+    },
+    {
+      "@id": "minedu:EBR",
+      "@type": "minedu:ModalidadType",
+      "rdfs:label": "Educación Básica Regular",
+      "rdfs:comment": "Dirigida a niños y adolescentes en la trayectoria educativa habitual (Inicial, Primaria y Secundaria)."
+    },
+    {
+      "@id": "minedu:EBA",
+      "@type": "minedu:ModalidadType",
+      "rdfs:label": "Educación Básica Alternativa",
+      "rdfs:comment": "Dirigida a personas de 14 años o más que no culminaron estudios regulares. Flexible en horarios y modalidades de atención."
+    },
+    {
+      "@id": "minedu:EBE",
+      "@type": "minedu:ModalidadType",
+      "rdfs:label": "Educación Básica Especial",
+      "rdfs:comment": "Dirigida a estudiantes con necesidades educativas especiales o talentos excepcionales."
+    },
+    {
+      "@id": "minedu:A1",
+      "@type": "minedu:NivelType",
+      "rdfs:label": "Inicial Cuna",
+      "rdfs:comment": "Atiende a niños de 0 a 2 años.",
+      "perteneceModalidad": "minedu:EBR"
+    },
+    {
+      "@id": "minedu:A2",
+      "@type": "minedu:NivelType",
+      "rdfs:label": "Inicial Jardín",
+      "rdfs:comment": "Atiende a niños de 3 a 5 años.",
+      "perteneceModalidad": "minedu:EBR"
+    },
+    {
+      "@id": "minedu:A3",
+      "@type": "minedu:NivelType",
+      "rdfs:label": "Inicial Cuna Jardín",
+      "rdfs:comment": "Atiende a niños de 0 a 5 años.",
+      "perteneceModalidad": "minedu:EBR"
+    },
+    {
+      "@id": "minedu:A5",
+      "@type": "minedu:NivelType",
+      "rdfs:label": "Inicial PRONOEI",
+      "rdfs:comment": "Programas No Escolarizados de Educación Inicial. Atiende a niños de 3 a 5 años.",
+      "perteneceModalidad": "minedu:EBR"
+    },
+    {
+      "@id": "minedu:B0",
+      "@type": "minedu:NivelType",
+      "rdfs:label": "Primaria",
+      "rdfs:comment": "Seis años de educación, de 6 a 11 años.",
+      "perteneceModalidad": "minedu:EBR"
+    },
+    {
+      "@id": "minedu:D1",
+      "@type": "minedu:NivelType",
+      "rdfs:label": "Básica Alternativa-Inicial e Intermedio",
+      "rdfs:comment": "Cinco años de educación, para personas entre 14 a 99 años.",
+      "perteneceModalidad": "minedu:EBA"
+    },
+    {
+      "@id": "minedu:D2",
+      "@type": "minedu:NivelType",
+      "rdfs:label": "Básica Alternativa-Avanzado",
+      "rdfs:comment": "Cuatro años de educación, para personas entre 14 a 99 años.",
+      "perteneceModalidad": "minedu:EBA"
+    },
+    {
+      "@id": "minedu:E0",
+      "@type": "minedu:NivelType",
+      "rdfs:label": "PRITE",
+      "rdfs:comment": "Programa de Intervención Temprana, de 0 a 5 años.",
+      "perteneceModalidad": "minedu:EBE"
+    },
+    {
+      "@id": "minedu:E1",
+      "@type": "minedu:NivelType",
+      "rdfs:label": "Básica Especial-Inicial",
+      "rdfs:comment": "Tres años de educación, de 3 a 7 años.",
+      "perteneceModalidad": "minedu:EBE"
+    },
+    {
+      "@id": "minedu:E2",
+      "@type": "minedu:NivelType",
+      "rdfs:label": "Básica Especial-Primaria",
+      "rdfs:comment": "Seis años de educación, de 6 a 20 años.",
+      "perteneceModalidad": "minedu:EBE"
+    },
+    {
+      "@id": "minedu:F0",
+      "@type": "minedu:NivelType",
+      "rdfs:label": "Secundaria",
+      "rdfs:comment": "Cinco años de educación, de 12 a 17 años.",
+      "perteneceModalidad": "minedu:EBR"
+    },
+    {
+      "@id": "minedu:DNI",
+      "@type": "minedu:TipoDocumentoType",
+      "rdfs:label": "DNI",
+      "rdfs:comment": "Documento Nacional de Identidad del Perú."
+    },
+    {
+      "@id": "minedu:CodigoEstudiante",
+      "@type": "minedu:TipoDocumentoType",
+      "rdfs:label": "Código de estudiante",
+      "rdfs:comment": "Código secuencial asignado por SIAGIE al estudiante para su tratamiento dentro de los aplicativos del MINEDU."
+    },
+    {
+      "@id": "minedu:CarnetExtranjeria",
+      "@type": "minedu:TipoDocumentoType",
+      "rdfs:label": "Carnet de Extranjería",
+      "rdfs:comment": "Documento de identidad oficial emitido por la Superintendencia Nacional de Migraciones (MIGRACIONES)."
+    },
+    {
+      "@id": "minedu:AD",
+      "@type": "minedu:CalificacionType",
+      "rdfs:label": "AD",
+      "rdfs:comment": "Logro destacado."
+    },
+    {
+      "@id": "minedu:A",
+      "@type": "minedu:CalificacionType",
+      "rdfs:label": "A",
+      "rdfs:comment": "Logro esperado."
+    },
+    {
+      "@id": "minedu:B",
+      "@type": "minedu:CalificacionType",
+      "rdfs:label": "B",
+      "rdfs:comment": "En proceso."
+    },
+    {
+      "@id": "minedu:C",
+      "@type": "minedu:CalificacionType",
+      "rdfs:label": "C",
+      "rdfs:comment": "En inicio."
+    },
+    {
+      "@id": "minedu:SinNota",
+      "@type": "minedu:CalificacionType",
+      "rdfs:label": "-",
+      "rdfs:comment": "Sin calificación."
+    }
+  ]
+}
