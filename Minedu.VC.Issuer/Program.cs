@@ -171,9 +171,16 @@ Log.Information("✔ Pasa configuración del pipeline de solicitudes HTTP");
 using (var scope = app.Services.CreateScope())
 {
     Log.Information("✔ Previo a inicializar la LISTA DE ESTADOS con metodo EnsureListExistsAsync de StatusListService.");
-    var statusSvc = scope.ServiceProvider.GetRequiredService<StatusListService>();
-    await statusSvc.EnsureListExistsAsync();
-    Log.Information("✔ Se asegura la existencia de la LISTA DE ESTADOS.");
+    try
+    {
+        var statusSvc = scope.ServiceProvider.GetRequiredService<StatusListService>();
+        await statusSvc.EnsureListExistsAsync();
+        Log.Information("✔ Se asegura la existencia de la LISTA DE ESTADOS.");
+    }
+    catch (Exception ex)
+    {
+        Log.Warning(ex, "⚠ No se pudo inicializar la lista de estados desde BD (BD no disponible). La API continúa con lista vacía.");
+    }
 }
 
 try
