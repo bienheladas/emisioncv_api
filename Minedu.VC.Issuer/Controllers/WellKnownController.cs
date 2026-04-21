@@ -50,7 +50,15 @@ namespace Minedu.VC.Issuer.Controllers
                             format = "ldp_vc",
                             credential_definition = new
                             {
-                                type = new[] { "VerifiableCredential", "CertificadoEstudios" }
+                                type = new[] { "VerifiableCredential", "CertificadoEstudios" },
+                                credentialSubject = new Dictionary<string, object>
+                                {
+                                    ["titular"] = new { display = new[] { new { name = "Titular", locale = "es" } } },
+                                    ["modalidad"] = new { display = new[] { new { name = "Modalidad", locale = "es" } } },
+                                    ["nivel"] = new { display = new[] { new { name = "Nivel", locale = "es" } } },
+                                    ["gradosConcluidos"] = new { display = new[] { new { name = "Grados Concluidos", locale = "es" } } },
+                                    ["institucionEducativa"] = new { display = new[] { new { name = "Institución Educativa", locale = "es" } } }
+                                }
                             },
                             // En piloto no declaramos cryptographic_suites_supported para no confundir a Inji
                             credential_status = new
