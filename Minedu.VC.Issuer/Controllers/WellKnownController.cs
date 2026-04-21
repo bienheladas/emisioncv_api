@@ -36,18 +36,39 @@ namespace Minedu.VC.Issuer.Controllers
                 var issuerIdentifier = cfg["Oidc4Vci:IssuerIdentifier"]!;
                 var credConfigId = cfg["Oidc4Vci:CredentialConfigurationId"] ?? "certificado-estudios-vc";
 
+                var assetsBase = $"{issuerBase.TrimEnd('/')}/assets";
+                var logoUrl = $"{assetsBase}/minedu-logo.png";
+
                 var metadata = new
                 {
                     credential_issuer = issuerIdentifier,
-                    authorization_servers = new[] { issuerIdentifier }, // mismo host en el prototipo
-                    //token_endpoint = $"{issuerBase.TrimEnd('/')}/token", //no existe en especificacion OID4VCI 1.0 se define en metada del AS
+                    authorization_servers = new[] { issuerIdentifier },
                     credential_endpoint = $"{issuerBase.TrimEnd('/')}/issuer/credential",
-                    // Configuración mínima del tipo de credencial
+                    display = new[]
+                    {
+                        new
+                        {
+                            name = "Ministerio de Educación",
+                            locale = "es",
+                            logo = new { url = logoUrl, alt_text = "Logo Ministerio de Educación del Perú" }
+                        }
+                    },
                     credential_configurations_supported = new Dictionary<string, object>
                     {
                         [credConfigId] = new
                         {
                             format = "ldp_vc",
+                            display = new[]
+                            {
+                                new
+                                {
+                                    name = "Certificado de Estudios",
+                                    locale = "es",
+                                    background_color = "#CC0000",
+                                    text_color = "#FFFFFF",
+                                    logo = new { url = logoUrl, alt_text = "Ministerio de Educación" }
+                                }
+                            },
                             credential_definition = new
                             {
                                 type = new[] { "VerifiableCredential", "CertificadoEstudios" },
@@ -60,7 +81,6 @@ namespace Minedu.VC.Issuer.Controllers
                                     ["institucionEducativa"] = new { display = new[] { new { name = "Institución Educativa", locale = "es" } } }
                                 }
                             },
-                            // En piloto no declaramos cryptographic_suites_supported para no confundir a Inji
                             credential_status = new
                             {
                                 types = new[] { "BitstringStatusListEntry" },
