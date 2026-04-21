@@ -132,6 +132,7 @@ namespace Minedu.VC.Issuer.Services
             try
             {
                 var node = System.Text.Json.Nodes.JsonNode.Parse(credentialJsonUtc);
+                node = SortJsonKeys(node); // orden determinístico para que el verificador pueda reproducirlo
                 canonicalJson = System.Text.Json.JsonSerializer.Serialize(
                     node,
                     new System.Text.Json.JsonSerializerOptions
@@ -198,6 +199,25 @@ namespace Minedu.VC.Issuer.Services
                 ["verificationMethod"] = kid,
                 ["jws"] = jwsCompact
             };
+        }
+
+        private static System.Text.Json.Nodes.JsonNode? SortJsonKeys(System.Text.Json.Nodes.JsonNode? node)
+        {
+            if (node is System.Text.Json.Nodes.JsonObject obj)
+            {
+                var sorted = new System.Text.Json.Nodes.JsonObject();
+                foreach (var kv in obj.OrderBy(k => k.Key, StringComparer.Ordinal))
+                    sorted[kv.Key] = SortJsonKeys(kv.Value);
+                return sorted;
+            }
+            if (node is System.Text.Json.Nodes.JsonArray arr)
+            {
+                var sortedArr = new System.Text.Json.Nodes.JsonArray();
+                foreach (var item in arr)
+                    sortedArr.Add(SortJsonKeys(item));
+                return sortedArr;
+            }
+            return node?.DeepClone();
         }
 
         private static byte[] Concat(params byte[][] parts)
