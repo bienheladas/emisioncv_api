@@ -9,7 +9,7 @@ namespace Minedu.VC.Issuer.Models
         public string[] Context { get; set; } = new[]
         {
             "https://www.w3.org/2018/credentials/v1",
-            "https://sistemas02.minedu.gob.pe/vc/context.jsonld",
+            "https://emisorcv.ninnstack.com/vc/context.jsonld",
             "https://w3id.org/security/jws/v1"
         };
 
@@ -20,7 +20,7 @@ namespace Minedu.VC.Issuer.Models
         public string[] Type { get; set; } = { "VerifiableCredential", "CertificadoEstudios" };
 
         [JsonPropertyName("issuer")]
-        public string Issuer { get; set; } = "did:web:sistemas02.minedu.gob.pe";
+        public string Issuer { get; set; } = "did:web:emisorcv.ninnstack.com";
 
         [JsonPropertyName("issuanceDate")]
         public DateTime IssuanceDate { get; set; } = DateTime.UtcNow;
