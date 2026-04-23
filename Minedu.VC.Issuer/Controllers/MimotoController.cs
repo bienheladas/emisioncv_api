@@ -103,9 +103,10 @@ namespace Minedu.VC.Issuer.Controllers
 
         private object BuildIssuerEntry(string issuerBase, string logoUrl, string credConfigId) => new
         {
-            issuer_id          = "emisorcv",
-            credential_issuer  = issuerBase,
-            protocol           = "OpenId4VCI",
+            issuer_id             = "emisorcv",
+            credential_issuer     = "emisorcv",
+            credential_issuer_host = issuerBase,
+            protocol              = "OpenId4VCI",
             display            = new[]
             {
                 new
