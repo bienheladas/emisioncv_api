@@ -4,6 +4,10 @@ namespace Minedu.VC.Issuer.Models
 {
     public class CredentialSubject
     {
+        [JsonPropertyName("id")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? Id { get; set; }
+
         [JsonPropertyName("modalidad")]
         public string Modalidad { get; set; } = string.Empty;         // EBR / EBA / EBE
         [JsonPropertyName("nivel")]

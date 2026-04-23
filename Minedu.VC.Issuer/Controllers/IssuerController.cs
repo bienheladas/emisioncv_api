@@ -6,6 +6,7 @@ using Minedu.VC.Issuer.Services;
 using Minedu.VC.Issuer.Services.Auth;
 using Minedu.VC.Issuer.Services.Cardano;
 using Minedu.VC.Issuer.Services.Mapper;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -55,7 +56,7 @@ namespace Minedu.VC.Issuer.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> IssueCredential()
+        public async Task<IActionResult> IssueCredential([FromBody] JsonElement? body = null)
         {
             /* Inji llamará al credential_endpoint que declares en la well-known. Por eso lo expongo como 
              * POST /issuer/credential para ligar token ↔ solicitud de forma directa en el piloto.*/
@@ -111,12 +112,19 @@ namespace Minedu.VC.Issuer.Controllers
                 _logger.LogInformation("Convierte la información de la solicitud en el Subject de la Credencial Verificable.");
                 var subject = CredentialSubjectMapper.ToSubject(aggregate);
 
+                // Holder binding: extraer DID del wallet desde proof.jwt del request
+                var holderDid = ExtractHolderDid(body);
+                if (holderDid != null)
+                    _logger.LogInformation("Holder DID extraído del proof.jwt: {HolderDid}", holderDid);
+                else
+                    _logger.LogInformation("No se encontró proof.jwt — credencial sin holder binding.");
+
                 _logger.LogInformation("Se asegura que la lista de estados de revocación exista. (_statusSvc.EnsureListExistsAsync)");
                 await _statusSvc.EnsureListExistsAsync();
 
                 // Step 2: build VC (will be implemented in later steps)
                 _logger.LogInformation("Construye la Credencial Verificable con el Subject de la solicitud. (_vcBuilder.BuildCredentialAsync)");
-                var vc = await _vcBuilder.BuildCredentialAsync(subject);
+                var vc = await _vcBuilder.BuildCredentialAsync(subject, holderDid);
 
                 _logger.LogInformation("Establece opciones de serialización como JSON de la credencial.");
                 var credentialJson = JsonSerializer.Serialize(vc, new JsonSerializerOptions
@@ -159,11 +167,65 @@ namespace Minedu.VC.Issuer.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error al emitir la credencial para la solicitud {idSolicitud}");
-                return StatusCode(500, new 
-                { 
+                return StatusCode(500, new
+                {
                     error = "server_error"
                 });
             }
+        }
+
+        // Extrae el DID del wallet desde proof.jwt del cuerpo del request OID4VCI
+        private string? ExtractHolderDid(JsonElement? body)
+        {
+            try
+            {
+                if (body is not JsonElement b || b.ValueKind != JsonValueKind.Object) return null;
+                if (!b.TryGetProperty("proof", out var proof)) return null;
+                if (!proof.TryGetProperty("jwt", out var jwtEl)) return null;
+
+                var jwt = jwtEl.GetString();
+                if (string.IsNullOrEmpty(jwt)) return null;
+
+                var parts = jwt.Split('.');
+                if (parts.Length != 3) return null;
+
+                // Decodificar header (base64url sin padding)
+                var headerBytes = Base64UrlDecode(parts[0]);
+                var headerJson = Encoding.UTF8.GetString(headerBytes);
+                using var headerDoc = JsonDocument.Parse(headerJson);
+                var header = headerDoc.RootElement;
+
+                // Caso 1: header contiene "jwk" directamente
+                if (header.TryGetProperty("jwk", out var jwkEl))
+                {
+                    var jwkJson = jwkEl.GetRawText();
+                    var encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(jwkJson))
+                        .TrimEnd('=').Replace('+', '-').Replace('/', '_');
+                    return $"did:jwk:{encoded}";
+                }
+
+                // Caso 2: header contiene "kid" que ya es un DID
+                if (header.TryGetProperty("kid", out var kidEl))
+                {
+                    var kid = kidEl.GetString();
+                    if (kid?.StartsWith("did:") == true)
+                        return kid.Split('#')[0];
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "No se pudo extraer el holder DID del proof.jwt — se omite holder binding.");
+                return null;
+            }
+        }
+
+        private static byte[] Base64UrlDecode(string input)
+        {
+            var s = input.Replace('-', '+').Replace('_', '/');
+            s += (s.Length % 4) switch { 2 => "==", 3 => "=", _ => "" };
+            return Convert.FromBase64String(s);
         }
     }
 }

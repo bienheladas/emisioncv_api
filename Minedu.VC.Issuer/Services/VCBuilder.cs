@@ -37,11 +37,14 @@ namespace Minedu.VC.Issuer.Services
             return vc;
         }
 
-        public async Task<VerifiableCredential> BuildCredentialAsync(CredentialSubject subject)
+        public async Task<VerifiableCredential> BuildCredentialAsync(CredentialSubject subject, string? holderDid = null)
         {
             var issuerBase = _config["Oidc4Vci:IssuerBaseUrl"];
             //var index = await _statusSvc.AllocateIndexAsync();
             var index = await _vcRepo.GetNextStatusListIndexAsync();
+
+            if (holderDid != null)
+                subject.Id = holderDid;
 
             var vc = new VerifiableCredential
             {
