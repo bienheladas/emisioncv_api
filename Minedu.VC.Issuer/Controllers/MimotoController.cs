@@ -23,10 +23,7 @@ namespace Minedu.VC.Issuer.Controllers
             {
                 response = new
                 {
-                    issuers = new[]
-                    {
-                        BuildIssuerEntry(issuerBase, logoUrl, credConfigId)
-                    }
+                    issuers = Array.Empty<object>()
                 }
             });
         }
