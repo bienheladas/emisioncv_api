@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Minedu.VC.Issuer.Models
 {
@@ -23,7 +22,7 @@ namespace Minedu.VC.Issuer.Models
         public string Issuer { get; set; } = "did:web:emisorcv.ninnstack.com";
 
         [JsonPropertyName("issuanceDate")]
-        public DateTime IssuanceDate { get; set; } = DateTime.UtcNow;
+        public string IssuanceDate { get; set; } = DateTime.UtcNow.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", System.Globalization.CultureInfo.InvariantCulture);
 
         [JsonPropertyName("credentialSubject")]
         public CredentialSubject CredentialSubject { get; set; }

@@ -20,12 +20,15 @@ namespace Minedu.VC.Issuer.Services
             _vcRepo = vcRepo;
         }
 
+        private static string UtcNowIso() =>
+            DateTime.UtcNow.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", System.Globalization.CultureInfo.InvariantCulture);
+
         public VerifiableCredential BuildCredential(CredentialSubject subject)
         {
             var vc = new VerifiableCredential
             {
                 Issuer = _config["Issuer:Did"],
-                IssuanceDate = DateTime.UtcNow,
+                IssuanceDate = UtcNowIso(),
                 CredentialSchema = new CredentialSchema
                 {
                     Id = _config["Schema:Url"],
@@ -49,7 +52,7 @@ namespace Minedu.VC.Issuer.Services
             var vc = new VerifiableCredential
             {
                 Issuer = _config["Issuer:Did"],
-                IssuanceDate = DateTime.UtcNow,
+                IssuanceDate = UtcNowIso(),
                 CredentialSchema = new CredentialSchema
                 {
                     Id = _config["Schema:Url"],
