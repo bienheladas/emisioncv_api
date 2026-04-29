@@ -135,7 +135,7 @@ namespace Minedu.VC.Issuer.Controllers
 
                 // Step 3: Create proof (payload desacoplado)
                 _logger.LogInformation("Crea la prueba criptografica con payload desacoplado. (_signatureService.CreateJws2020DetachedProof)");
-                var proof = _signatureService.CreateJws2020DetachedProof(credentialJson);
+                var proof = await _signatureService.CreateJws2020DetachedProof(credentialJson);
 
                 // Step 4: Attach proof
                 _logger.LogInformation("Agrega la prueba criptográfica a la credencial verificable de la solicitud.");

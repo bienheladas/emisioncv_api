@@ -115,7 +115,7 @@ namespace Minedu.VC.Issuer.Services
         /// Build a JSON Web Signature 2020 proof with detached payload (b64:false).
         /// Returns an object with fields: type, created, proofPurpose, verificationMethod, jws
         /// </summary>
-        public Dictionary<string, object> CreateJws2020DetachedProof(string credentialJsonUtc)
+        public async Task<Dictionary<string, object>> CreateJws2020DetachedProof(string credentialJsonUtc)
         {
             // 1) Load JWK (OKP/Ed25519) from issuer-key.json
             var jwk = LoadOkpJwk();
@@ -171,14 +171,23 @@ namespace Minedu.VC.Issuer.Services
 
             var payloadRaw = Encoding.UTF8.GetString(payloadBytes);
             // Guarda en archivo para comparación posterior
-            var dumpPath = Path.Combine(AppContext.BaseDirectory, "Data", "last_payload_signed.json");
-            File.WriteAllTextAsync(dumpPath, payloadRaw, Encoding.UTF8);
+            try
+            {
+                var dumpPath = Path.Combine(AppContext.BaseDirectory, "Data", "last_payload_signed.json");
+                Directory.CreateDirectory(Path.GetDirectoryName(dumpPath)!);
+                await File.WriteAllTextAsync(dumpPath, payloadRaw, Encoding.UTF8);
+                Console.WriteLine("Payload guardado en: " + dumpPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("WARN: no se pudo guardar payload en disco: " + ex.Message);
+            }
 
             Console.WriteLine("HEADER_EMISOR: " + protectedB64);
             Console.WriteLine("PAYLOAD_HASH_EMISOR: " + Convert.ToHexString(SHA256.HashData(payloadBytes)));
             Console.WriteLine("PAYLOAD_LEN_EMISOR: " + payloadBytes.Length);
             Console.WriteLine("PUBKEY_EMISOR: " + jwk.X);
-            Console.WriteLine("Payload guardado en: " + dumpPath);
+            Console.WriteLine("PAYLOAD_FULL_EMISOR: " + payloadRaw);
 
             // 4) Sign with Ed25519
             var d = Base64UrlDecode(jwk.D!);
