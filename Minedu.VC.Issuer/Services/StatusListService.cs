@@ -113,7 +113,7 @@ namespace Minedu.VC.Issuer.Services
                 Directory.CreateDirectory(dataDir);
                 await File.WriteAllTextAsync(Path.Combine(dataDir, "statuslist-payload-emisor.json"), json);
 
-                var proof = _signature.CreateJws2020DetachedProof(json);
+                var proof = await _signature.CreateJws2020DetachedProof(json);
 
                 vc.Proof = new Proof
                 {
@@ -231,7 +231,7 @@ namespace Minedu.VC.Issuer.Services
             {
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
             });
-            var proof = _signature.CreateJws2020DetachedProof(json);
+            var proof = await _signature.CreateJws2020DetachedProof(json);
 
             vc.Proof = new Proof
             {
